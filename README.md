@@ -5,6 +5,8 @@ Users can view available rooms, make reservations, and cancel them.
 Overlapping reservations are prevented at the database level.
 
 ## Tech stack
+- Java 25
+- Spring Boot
 - PostgreSQL
 
 ## Database setup
