@@ -14,4 +14,14 @@ Overlapping reservations are prevented at the database level.
 2. Run `database/schema.sql`
 3. Run `database/data.sql` (sample data)
 
+## API endpoints
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/rooms` | List all rooms |
+| GET | `/rooms/{id}/availability?date=YYYY-MM-DD` | Free time slots for a room on a given day |
+| GET | `/reservations` | List all reservations |
+| GET | `/reservations?userId={id}` | Reservations of one user |
+| POST | `/reservations` | Create a reservation |
+| PATCH | `/reservations/{id}/cancel` | Cancel a reservation |
+
 *Work in progress.*
