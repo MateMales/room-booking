@@ -2,6 +2,8 @@ package com.mate.room_booking.reservation;
 
 import java.util.List;
 
+import com.mate.room_booking.common.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +27,7 @@ public class ReservationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Reservation createReservation(@RequestBody CreateReservationRequest request) {
+    public Reservation createReservation(@Valid @RequestBody CreateReservationRequest request) {
         Reservation reservation = new Reservation(
                 request.userId(),
                 request.roomId(),
@@ -37,7 +39,8 @@ public class ReservationController {
     }
     @PatchMapping("/{id}/cancel")
     public Reservation cancelReservation(@PathVariable Integer id) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow();
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("Reservation "+id+" not found"));
         reservation.cancel();
         return reservationRepository.save(reservation);
     }

@@ -24,4 +24,17 @@ Overlapping reservations are prevented at the database level.
 | POST | `/reservations` | Create a reservation |
 | PATCH | `/reservations/{id}/cancel` | Cancel a reservation |
 
+## Error handling
+Errors are returned in the standard Problem Details format (RFC 9457).
+
+| Situation | Status |
+|---|---|
+| Reservation does not exist | 404 Not Found |
+| Room already booked in that time slot | 409 Conflict |
+| Missing or invalid fields, start time in the past | 400 Bad Request |
+| End before start, or longer than 4 hours | 400 Bad Request |
+| User or room does not exist | 400 Bad Request |
+
+Overlapping reservations are blocked by a PostgreSQL exclusion constraint,
+so the rule holds even when two requests arrive at the same moment.
 *Work in progress.*
