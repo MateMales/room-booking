@@ -37,4 +37,17 @@ Errors are returned in the standard Problem Details format (RFC 9457).
 
 Overlapping reservations are blocked by a PostgreSQL exclusion constraint,
 so the rule holds even when two requests arrive at the same moment.
+
+## Running tests
+The project has 14 integration tests that start the whole application
+and send real HTTP requests to it, using a separate test database.
+
+1. Create a database named `room_booking_test`
+2. Run `database/schema.sql` and `database/data.sql` on it
+3. Set the `DB_PASSWORD` environment variable
+4. Run `./mvnw test` (on Windows: `mvnw.cmd test`)
+
+Tests cover creating and cancelling reservations, error responses
+(400, 404, 409), and edge cases of the free time slot query.
+
 *Work in progress.*
