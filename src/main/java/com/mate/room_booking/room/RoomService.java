@@ -20,8 +20,8 @@ public class RoomService {
                 FROM reservations
                 WHERE room_id = :roomId
                   AND status = 'ACTIVE'
-                  AND start_time < CAST(:dayEnd AS timestamp)
-                  AND end_time   > CAST(:dayStart AS timestamp)
+                  AND tsrange(start_time, end_time)
+                   && tsrange(CAST(:dayStart AS timestamp), CAST(:dayEnd AS timestamp))
             ),
             points AS (
                 SELECT CAST(:dayStart AS timestamp) AS start_time,

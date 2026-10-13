@@ -42,3 +42,5 @@ CREATE TABLE reservations (
         tsrange(start_time, end_time) WITH &&
     ) WHERE (status = 'ACTIVE')
 );
+
+CREATE INDEX idx_reservations_user_id ON reservations (user_id);
