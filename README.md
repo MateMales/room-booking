@@ -40,8 +40,20 @@ at the same moment.
 - Spring Boot 4.1 (Web MVC, Data JPA, Validation)
 - PostgreSQL 18
 - JUnit 5, AssertJ
+- Docker, Docker Compose
 
 ## Getting started
+
+### Quick start with Docker
+The fastest way: no Java or PostgreSQL installation needed, only Docker.
+```bash
+docker compose up --build
+```
+This starts PostgreSQL, creates the tables and sample data, and runs the
+application at `http://localhost:8080`. Stop it with `Ctrl + C`, then
+`docker compose down`.
+
+### Running without Docker
 
 ### Prerequisites
 - JDK 25
@@ -158,5 +170,7 @@ src/main/java/com/mate/room_booking/
     room/               Room entity, repository, controller, availability service
     reservation/        Reservation entity, repository, controller, request DTO
     common/             global exception handler
+    Dockerfile              two-stage build: JDK to compile, JRE to run
+    docker-compose.yml      PostgreSQL + application, started with one command
 src/test/java/...       integration tests
 ````
