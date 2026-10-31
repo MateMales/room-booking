@@ -64,8 +64,8 @@ application at `http://localhost:8080`. Stop it with `Ctrl + C`, then
 CREATE DATABASE room_booking;
 ````
 Then run, in this order:
-1. `database/schema.sql` (tables, constraints, indexes)
-2. `database/data.sql` (sample users, buildings, rooms and reservations)
+1. `src/main/resources/db/migration/V1__init_schema.sql` (tables, constraints, indexes)
+2. `src/main/resources/db/migration/V2__sample_data.sql` (sample users, buildings, rooms and reservations)
 
 ### 2. Set the database password
 The password is read from the `DB_PASSWORD` environment variable,
@@ -148,7 +148,7 @@ with no new index needed.
 Tests use a separate database so they never touch development data.
 
 1. Create a database named `room_booking_test`
-2. Run `database/schema.sql` and `database/data.sql` on it
+2. Run `src/main/resources/db/migration/V1__init_schema.sql` and `src/main/resources/db/migration/V2__sample_data.sql` on it
 3. Set the `DB_PASSWORD` environment variable
 4. Run:
 ````bash
@@ -163,9 +163,9 @@ opening time, cancelled reservations, other rooms).
 
 ````
 database/
-    schema.sql          tables, constraints, indexes
-    data.sql            sample data
-    perf-data.sql       2 million rows for performance testing
+    V1__init_schema.sql          tables, constraints, indexes
+    V2__sample_data.sql            sample data
+    perf-V2__sample_data.sql       2 million rows for performance testing
 src/main/java/com/mate/room_booking/
     room/               Room entity, repository, controller, availability service
     reservation/        Reservation entity, repository, controller, request DTO

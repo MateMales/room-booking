@@ -1,5 +1,5 @@
 -- Generates a large dataset for performance testing.
--- Run on an empty database after schema.sql and data.sql.
+-- Run on an empty database after V1__init_schema.sql and V2__sample_data.sql.
 -- Result: 10,000 users, 200 rooms, 2,000,000 non-overlapping reservations.
 
 INSERT INTO users (first_name, last_name, email, role)
