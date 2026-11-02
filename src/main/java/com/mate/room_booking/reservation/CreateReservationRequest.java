@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public record CreateReservationRequest(
-        @NotNull Integer userId,
         @NotNull Integer roomId,
         @NotNull @Future LocalDateTime startTime,
         @NotNull LocalDateTime endTime,

@@ -2,46 +2,53 @@ package com.mate.room_booking.reservation;
 
 import java.util.List;
 
-import com.mate.room_booking.common.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
+    // samo ADMIN (pravilo u SecurityConfig)
     @GetMapping
     public List<Reservation> getReservations(@RequestParam(required = false) Integer userId) {
-        if (userId == null) {
-            return reservationRepository.findAll();
-        }
-        return reservationRepository.findByUserId(userId);
+        return reservationService.findAll(userId);
+    }
+
+    // rezervacije ulogovanog korisnika
+    @GetMapping("/mine")
+    public List<Reservation> getMyReservations(@AuthenticationPrincipal Jwt jwt) {
+        return reservationService.findByUser(userId(jwt));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Reservation createReservation(@Valid @RequestBody CreateReservationRequest request) {
-        Reservation reservation = new Reservation(
-                request.userId(),
-                request.roomId(),
-                request.startTime(),
-                request.endTime(),
-                request.purpose()
-        );
-        return reservationRepository.save(reservation);
+    public Reservation createReservation(@Valid @RequestBody CreateReservationRequest request,
+                                         @AuthenticationPrincipal Jwt jwt) {
+        return reservationService.create(userId(jwt), request);
     }
+
     @PatchMapping("/{id}/cancel")
-    public Reservation cancelReservation(@PathVariable Integer id) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(()->
-                new ResourceNotFoundException("Reservation "+id+" not found"));
-        reservation.cancel();
-        return reservationRepository.save(reservation);
+    public Reservation cancelReservation(@PathVariable Integer id,
+                                         @AuthenticationPrincipal Jwt jwt) {
+        return reservationService.cancel(id, userId(jwt), isAdmin(jwt));
+    }
+
+    private Integer userId(Jwt jwt) {
+        Number userId = jwt.getClaim("userId");
+        return userId.intValue();
+    }
+
+    private boolean isAdmin(Jwt jwt) {
+        return "ADMIN".equals(jwt.getClaimAsString("role"));
     }
 }
