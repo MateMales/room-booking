@@ -1,9 +1,11 @@
 -- Generates a large dataset for performance testing.
--- Run on an empty database after V1__init_schema.sql and V2__sample_data.sql.
+-- Run on a database where the application has already applied the Flyway migrations.
 -- Result: 10,000 users, 200 rooms, 2,000,000 non-overlapping reservations.
 
-INSERT INTO users (first_name, last_name, email, role)
-SELECT 'User', 'Number' || g, 'user' || g || '@etf.rs', 'STUDENT'
+-- every generated user gets the password "password123" (BCrypt hash)
+INSERT INTO users (first_name, last_name, email, role, password_hash)
+SELECT 'User', 'Number' || g, 'user' || g || '@etf.rs', 'STUDENT',
+       '$2a$10$ZMGrp6gfmLuQPcrGzrXpgO..XtKuFNQeATRrUFTSz0VK7YfvBYsW6'
 FROM generate_series(1, 10000) AS g;
 
 INSERT INTO rooms (building_id, name, capacity, type)
